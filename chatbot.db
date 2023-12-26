@@ -1,0 +1,41 @@
+import sqlite3
+
+# Create a database connection
+connection = sqlite3.connect('chatbot.db')
+
+# Create a cursor object
+cursor = connection.cursor()
+
+# Create the users table
+cursor.execute("""CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    password TEXT NOT NULL
+)""")
+
+# Create the conversations table
+cursor.execute("""CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    bot_id INTEGER NOT NULL,
+    timestamp DATETIME NOT NULL,
+    message TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (bot_id) REFERENCES bots (id)
+)""")
+
+# Create the bots table
+cursor.execute("""CREATE TABLE IF NOT EXISTS bots (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    language TEXT NOT NULL,
+    platform TEXT NOT NULL
+)""")
+
+# Commit the changes to the database
+connection.commit()
+
+# Close the database connection
+connection.close()
